@@ -8,4 +8,8 @@
 <h2>@Model.Name</h2>
 <h4>Customer Id: @Model.Id</h4>
 <h4>Membership Type: @Model.MembershipType.Name</h4>
+@if (@Model.Birthdate.HasValue)
+{
+    <h4>Birthdate: @Model.Birthdate.Value.ToString("dd MMMM, yyyy")</h4>
+}
 <h4>Discount Rate: @Model.MembershipType.DiscountRate %</h4>
