@@ -1,0 +1,30 @@
+﻿@model Vidly.ViewModels.MovieFormViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+// TODO: Add Date Picker for Date Field.
+
+@using (Html.BeginForm("Save", "Movies"))
+{
+    <div class="form-group">
+        @Html.LabelFor(vm => vm.Movie.Name)
+        @Html.TextBoxFor(vm => vm.Movie.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(vm => vm.Movie.ReleaseDate)
+        @Html.TextBoxFor(vm => vm.Movie.ReleaseDate, "{0: d MMM, yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(vm => vm.Movie.GenreId)
+        @Html.DropDownListFor(vm => vm.Movie.GenreId, new SelectList(Model.Genres, "Id", "Name"), "Select Genre", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(vm => vm.Movie.NumberInStock)
+        @Html.TextBoxFor(vm => vm.Movie.NumberInStock, new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(vm => vm.Movie.Id)
+    <button type="submit" class="btn btn-primary">Save</button>
+}

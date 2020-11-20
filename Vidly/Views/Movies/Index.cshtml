@@ -5,7 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Movie List</h2>
+<h2>Movies</h2>
+
+
+    @Html.ActionLink("NEW MOVIE", "New", "Movies", new { @class="btn btn-primary"})
+
+<hr />
 
 @if (!Model.Any())
 {
@@ -22,7 +27,7 @@ else
         @foreach (var movie in Model)
         {
             <tr>
-                <td>@Html.ActionLink(movie.Name, "Details", "Movies", new { id = movie.Id }, null)</td>
+                <td>@Html.ActionLink(movie.Name, "Edit", "Movies", new { id = movie.Id }, null)</td>
                 <td>@movie.Genre.Name</td>
                 <td>Delete</td>
             </tr>
