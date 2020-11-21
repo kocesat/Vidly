@@ -10,16 +10,20 @@ namespace Vidly.Models
     {
         public int Id { get; set; }
         
-        [Required]
-        [StringLength(255)]
+        [Required(ErrorMessage = "Please enter customer's name")]
+        [StringLength(255, ErrorMessage = "Name sould have character less than 255")]
         public string Name { get; set; }
         
         [Display(Name = "Date of Birth")]
+        [Min18YearsIfAMember]
         public DateTime? Birthdate { get; set; }
         public bool IsSubscribedToNewsletter { get; set; }
 
-        [Display(Name = "MembershipType")]
+        
         public MembershipType MembershipType { get; set; }
+
+        [Display(Name = "Membership Type")]
+        [Required(ErrorMessage = "Please choose Membership Type")]
         public byte MembershipTypeId { get; set; }
     }
 }

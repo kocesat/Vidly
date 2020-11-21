@@ -8,7 +8,7 @@
 <h2>Customer List</h2>
 
 
-@Html.ActionLink("NEW CUSTOMER", "New", "Customers", new { @class = "btn btn-primary" })
+@Html.ActionLink("New", "New", "Customers", new { @class = "btn btn-primary" })
 
 <hr />
 
@@ -19,7 +19,7 @@
 else
 {
     <table class="table table-bordered table-hover">
-        <tr>
+        <tr>    
             <th>Customer</th>
             <th>Membership Type</th>
             <th>Operations</th>

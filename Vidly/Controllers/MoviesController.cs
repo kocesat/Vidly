@@ -51,12 +51,14 @@ namespace Vidly.Controllers
 
             var viewModel = new MovieFormViewModel()
             {
+                Movie = new Movie(),
                 Genres = genres
             };
 
             return View("MovieForm", viewModel);
         }
 
+        [HttpPost]
         public ActionResult Save(Movie movie)
         {
             if (movie.Id == 0)
