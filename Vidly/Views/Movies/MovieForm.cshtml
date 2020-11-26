@@ -3,27 +3,37 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>@Model.Title</h2>
 
 
 @using (Html.BeginForm("Save", "Movies"))
 {
+    @Html.ValidationSummary(true, "Please fix the following errors.")
     <div class="form-group">
-        @Html.LabelFor(vm => vm.Movie.Name)
-        @Html.TextBoxFor(vm => vm.Movie.Name, new { @class = "form-control" })
+        @Html.LabelFor(vm => vm.Name)
+        @Html.TextBoxFor(vm => vm.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(vm => vm.Name)
     </div>
     <div class="form-group">
-        @Html.LabelFor(vm => vm.Movie.ReleaseDate)
-        @Html.TextBoxFor(vm => vm.Movie.ReleaseDate, "{0: d MMM, yyyy}", new { @class = "form-control" })
+        @Html.LabelFor(vm => vm.ReleaseDate)
+        @Html.TextBoxFor(vm => vm.ReleaseDate, "{0: d MMM yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(vm => vm.ReleaseDate)
     </div>
     <div class="form-group">
-        @Html.LabelFor(vm => vm.Movie.GenreId)
-        @Html.DropDownListFor(vm => vm.Movie.GenreId, new SelectList(Model.Genres, "Id", "Name"), "Select Genre", new { @class = "form-control" })
+        @Html.LabelFor(vm => vm.GenreId)
+        @Html.DropDownListFor(vm => vm.GenreId, new SelectList(Model.Genres, "Id", "Name"), "Select Genre", new { @class = "form-control" })
+        @Html.ValidationMessageFor(vm => vm.GenreId)
     </div>
     <div class="form-group">
-        @Html.LabelFor(vm => vm.Movie.NumberInStock)
-        @Html.TextBoxFor(vm => vm.Movie.NumberInStock, new { @class = "form-control" })
+        @Html.LabelFor(vm => vm.NumberInStock)
+        @Html.TextBoxFor(vm => vm.NumberInStock, new { @class = "form-control" })
+        @Html.ValidationMessageFor(vm => vm.NumberInStock)
     </div>
-    @Html.HiddenFor(vm => vm.Movie.Id)
+    @Html.HiddenFor(vm => vm.Id)
+    @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")    
 }
