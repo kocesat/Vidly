@@ -111,6 +111,7 @@ namespace Vidly.Controllers
 
             _context.SaveChanges();
 
+            TempData["Success"] = "Added Successfully!";
             return RedirectToAction("Index", "Customers");
         }
     }
