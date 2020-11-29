@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Vidly.Models.Customer>
+﻿
 
 @{
     ViewBag.Title = "CustomerList";
@@ -7,58 +7,106 @@
 
 <h2>Customer List</h2>
 
-
 @Html.ActionLink("New Customer", "New", "Customers", new { @class = "btn btn-primary" })
 
 <br /> <br />
 
-@if (!Model.Any())
-{
-    <p>There is no customers registered yet!</p>
-}
-else
-{
-    <table class="table table-bordered table-hover" id="customers">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Customer</th>
-                <th>Membership Type</th>
-                <th>Operations</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in Model)
-            {
-                <tr>
-                    <td class="details-control" data-customer-id="@customer.Id"></td>
-                    <td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null)</td>
-                    <td>@customer.MembershipType.Name</td>
-                    <td>
-                        <div class="btn-group">
-                            <a href="#" data-customer-id="@customer.Id" class="btn btn-danger btn-group-xs js-delete">Delete</a>
-                            <a href="#" class="btn btn-warning btn-group-sm">Edit</a>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<table class="table table-bordered table-hover" id="customers">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Customer</th>
+            <th>Membership Type</th>
+            <th>Operations</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
 
 @section scripts
 {
     <script>
         /* Formatting function for row details - modify as you need */
-        function format() {
+        function format(d) {
+            var member = '';
+
+            if (d.isSubscribedToNewsletter) {
+                member = "Yes";
+            } else {
+                member = "No";
+            }
+
+            var dt = new Date(d.birthdate);
+            var date = dt.getDate();
+            var month = dt.getMonth() + 1;
+            var year = dt.getYear();
+            var birthdateString = date + "-" + month + "-" + year;
+
             // `d` is the original data object for the row
-            return '..........';
+            return "<table class='table table-bordered table-hover'>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td><strong>Id</strong></td>" +
+                "<td>" + d.id + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Name</strong></td>" +
+                "<td>" + d.name + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Birthdate</strong></td>" +
+                "<td>" + birthdateString + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Is Subscribed To Newsletter</strong></td>" +
+                "<td>" + member + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Membership Type</strong></td>" +
+                "<td>" + d.membershipType.name + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Membership Type Id</strong></td>" +
+                "<td>" + d.membershipTypeId + "</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>"
         }
 
 
-
         $(document).ready(function () {
-            var table = $("#customers").DataTable();
+            var table = $("#customers").DataTable({
+                ajax: {
+                    url: "/api/customers",
+                    method: "GET",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        className: "details-control",
+                        orderable: false,
+                        data: null,
+                        defaultContent: "<"
+                    },
+                    {
+                        data: "name",
+                        render: function (data, type, customer) {
+                            return "<a href='/customers/edit/" + customer.id + "'>" + customer.name + "</a>";
+                        }
+
+                    },
+                    {
+                        data: "membershipType.name"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn btn-danger btn-xs js-delete' data-customer-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
 
             $("#customers tbody").on("click", "td.details-control", function () {
                 var tr = $(this).closest("tr");
@@ -70,7 +118,7 @@ else
                     tr.removeClass("shown");
                 } else {
                     // open this row
-                    row.child(format()).show();
+                    row.child(format(row.data())).show();
                     tr.addClass('shown');
                 }
             })
@@ -84,7 +132,7 @@ else
                             url: "/api/customers/" + button.attr("data-customer-id"),
                             method: "DELETE",
                             success: function () {
-                                button.parents("tr").remove();
+                                table.row(button.parents("tr")).remove().draw();
                             }
                         });
                     }

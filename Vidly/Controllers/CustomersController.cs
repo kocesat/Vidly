@@ -31,9 +31,11 @@ namespace Vidly.Controllers
             // its foreign keys (related data), apply Include() method
             // using System.Data.Entity
 
-            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+            //var customers = _context.Customers.Include(c => c.MembershipType).ToList();
 
-            return View(customers);
+            //return View(customers);
+
+            return View(); // feeding customers table with API
         }
 
         public ActionResult Details(int id)
