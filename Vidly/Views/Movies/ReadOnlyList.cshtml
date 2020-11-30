@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Vidly.Models.Movie>
+
+@{
+    ViewBag.Title = "Movies";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Movies</h2>
+
+<table class="table table-bordered table-hover" id="movies">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Movie</th>
+            <th>Genre</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>#</th>
+            <th>Movie</th>
+            <th>Genre</th>
+        </tr>
+    </tfoot>
+</table>
+
+@section scripts
+{
+    <script>
+        function format(d) {
+            var dt = new Date(d.releaseDate);
+            var date = dt.getDate();
+            var month = dt.getMonth()+ 1;
+            var year = dt.getYear() + 1900;
+
+            var dateReleased = date + "-" + month + "-" + year;
+
+            var dt2 = new Date(d.dateAdded);
+            var date2 = dt2.getDate();
+            var month2 = dt2.getMonth() + 1;
+            var year2 = dt2.getYear()+ 1900;
+
+            var dateAdded = date2 + "-" + month2 + "-" + year2;
+
+            return "Date of Release: " + dateReleased + " <br />" +
+                "Date of Addition: " + dateAdded;
+        }
+
+
+        //jquery-ajax api calls to feed the table with data
+        $(document).ready(function () {
+            var table = $("#movies").DataTable({
+                "order": [],
+                ajax: {
+                    url: "/api/movies",
+                    method: "GET",
+                    dataSrc: "",
+                },
+                columns: [
+                    {
+                        className: "details-control",
+                        data: null,
+                        defaultContent: "<",
+                        orderable: false
+                    },
+
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "genre.name"
+                    }
+                ]
+            });
+
+            $("#movies tbody").on("click", "td.details-control", function () {
+                var tr = $(this).closest("tr");
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass("shown");
+                } else {
+                    row.child(format(row.data())).show();
+                    tr.addClass("shown");
+                }
+            })
+
+        });
+    </script>
+
+}

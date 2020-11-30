@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using Vidly.Dtos;
 using Vidly.Models;
+using System.Data.Entity;
 
 namespace Vidly.Controllers.Api
 {
@@ -23,7 +24,10 @@ namespace Vidly.Controllers.Api
         public IHttpActionResult GetMovies()
         {
             // argument of Select is actually a func-delegate
-            var movieList = _context.Movies.ToList().Select(Mapper.Map<Movie, MovieDto>);
+            var movieList = _context.Movies.OrderByDescending(m => m.DateAdded)
+                .Include(m => m.Genre)
+                .ToList()
+                .Select(Mapper.Map<Movie, MovieDto>);
 
             return Ok(movieList);
         }
@@ -43,6 +47,7 @@ namespace Vidly.Controllers.Api
 
         // POST /api/movies
         [HttpPost]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public IHttpActionResult CreateMovie(MovieDto movieDto)
         {
             if (!ModelState.IsValid)
@@ -65,6 +70,7 @@ namespace Vidly.Controllers.Api
 
         //PUT /api/movies/{id}
         [HttpPut]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public IHttpActionResult UpdateMovie(int id, MovieDto movieDto)
         {
             if (!ModelState.IsValid)
@@ -89,6 +95,7 @@ namespace Vidly.Controllers.Api
         }
 
         // DELETE: /api/movies/{id}
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public IHttpActionResult DeleteMovie(int id)
         {
             var movieInDb = _context.Movies.SingleOrDefault(m => m.Id == id);
@@ -103,7 +110,6 @@ namespace Vidly.Controllers.Api
 
             return Ok();
         }
-
     }
 }
 

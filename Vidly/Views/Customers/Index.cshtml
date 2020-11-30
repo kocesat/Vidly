@@ -7,10 +7,10 @@
 
 @if (TempData["Success"] != null)
 {
-    <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+    <p class="alert alert-success" role="alert">@TempData["Success"]</p>
 }
 
-<h2>Customer List</h2>
+<h2>Customers</h2>
 
 @Html.ActionLink("New Customer", "New", "Customers", new { @class = "btn btn-primary" })
 
@@ -20,12 +20,20 @@
 <table class="table table-bordered table-hover" id="customers">
     <thead>
         <tr>
-            <th></th>
+            <th>#</th>
             <th>Customer</th>
             <th>Membership Type</th>
             <th>Operations</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <th>#</th>
+            <th>Customer</th>
+            <th>Membership Type</th>
+            <th>Operations</th>
+        </tr>
+    </tfoot>
     <tbody></tbody>
 </table>
 
@@ -46,7 +54,7 @@
             var dt = new Date(d.birthdate);
             var date = dt.getDate();
             var month = dt.getMonth() + 1;
-            var year = dt.getYear();
+            var year = dt.getYear()+ 1900;
             var birthdateString = date + "-" + month + "-" + year;
 
             // `d` is the original data object for the row
@@ -83,6 +91,7 @@
 
         $(document).ready(function () {
             var table = $("#customers").DataTable({
+                order: [],
                 ajax: {
                     url: "/api/customers",
                     method: "GET",
@@ -91,9 +100,9 @@
                 columns: [
                     {
                         className: "details-control",
-                        orderable: false,
                         data: null,
-                        defaultContent: "<"
+                        defaultContent: "<",
+                        orderable: false
                     },
                     {
                         data: "name",
@@ -108,7 +117,7 @@
                     {
                         data: "id",
                         render: function (data) {
-                            return "<button class='btn btn-danger btn-xs js-delete' data-customer-id=" + data + ">Delete</button>";
+                            return "<button class='btn btn-danger btn-sm js-delete' data-customer-id=" + data + ">Delete</button>";
                         }
                     }
                 ]
@@ -132,7 +141,7 @@
             $("#customers").on("click", ".js-delete", function () {
                 var button = $(this);
 
-                bootbox.confirm("Are you sure you want to delete this customer", function (result) {
+                bootbox.confirm("Are you sure you want to delete this customer?", function (result) {
                     if (result) {
                         $.ajax({
                             url: "/api/customers/" + button.attr("data-customer-id"),

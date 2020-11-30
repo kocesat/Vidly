@@ -9,6 +9,7 @@ using Vidly.ViewModels;
 
 namespace Vidly.Controllers
 {
+
     public class CustomersController : Controller
     {
         // ApplicationDbContext is needed to manually be added as a private field to controller
