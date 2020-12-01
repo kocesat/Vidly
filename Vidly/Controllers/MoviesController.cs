@@ -93,6 +93,7 @@ namespace Vidly.Controllers
                     movieInDb.GenreId = movie.GenreId;
             }
 
+            TempData["Success"] = "Added Succesfully";
             _context.SaveChanges();
             return RedirectToAction("Index", "Movies");
         }

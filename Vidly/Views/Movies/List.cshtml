@@ -5,31 +5,46 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Movies</h2>
+@if (TempData["Success"] != null)
+{
+    @*<p class="alert alert-success" role="alert">@TempData["Success"]</p>*@
 
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        @TempData["Success"]
+    </div>
+}
 
-    @Html.ActionLink("New Movie", "New", "Movies", new { @class="btn btn-primary"})
+<p>
+    @Html.ActionLink("New Movie", "New", "Movies", new { @class = "btn btn-primary" })
+</p>
 
-<br /> <br />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Movies</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered table-hover" id="movies">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Movie</th>
+                    <th>Genre</th>
+                    <th>Operations</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Movie</th>
+                    <th>Genre</th>
+                    <th>Operations</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
 
-<table class="table table-bordered table-hover" id="movies">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Movie</th>
-            <th>Genre</th>
-            <th>Operations</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>#</th>
-            <th>Movie</th>
-            <th>Genre</th>
-            <th>Operations</th>
-        </tr>
-    </tfoot>
-</table>
 
 @section scripts
 {
@@ -37,7 +52,7 @@
         function format(d) {
             var dt = new Date(d.releaseDate);
             var date = dt.getDate();
-            var month = dt.getMonth()+ 1;
+            var month = dt.getMonth() + 1;
             var year = dt.getYear() + 1900;
 
             var dateReleased = date + "-" + month + "-" + year;
@@ -45,7 +60,7 @@
             var dt2 = new Date(d.dateAdded);
             var date2 = dt2.getDate();
             var month2 = dt2.getMonth() + 1;
-            var year2 = dt2.getYear()+ 1900;
+            var year2 = dt2.getYear() + 1900;
 
             var dateAdded = date2 + "-" + month2 + "-" + year2;
 
@@ -121,6 +136,6 @@
             })
 
         });
-    </script>    
-    
+    </script>
+
 }

@@ -7,35 +7,46 @@
 
 @if (TempData["Success"] != null)
 {
-    <p class="alert alert-success" role="alert">@TempData["Success"]</p>
+    @*<p class="alert alert-success" role="alert">@TempData["Success"]</p>*@
+
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        @TempData["Success"]
+    </div>
 }
 
-<h2>Customers</h2>
-
-@Html.ActionLink("New Customer", "New", "Customers", new { @class = "btn btn-primary" })
-
 <br />
-<br />
+<p>
+    @Html.ActionLink("New Customer", "New", "Customers", new { @class = "btn btn-primary" })
+</p>
 
-<table class="table table-bordered table-hover" id="customers">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Customer</th>
-            <th>Membership Type</th>
-            <th>Operations</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>#</th>
-            <th>Customer</th>
-            <th>Membership Type</th>
-            <th>Operations</th>
-        </tr>
-    </tfoot>
-    <tbody></tbody>
-</table>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Customers</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-hover" id="customers">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Membership Type</th>
+                    <th>Operations</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Membership Type</th>
+                    <th>Operations</th>
+                </tr>
+            </tfoot>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
 
 
 @section scripts
@@ -54,7 +65,7 @@
             var dt = new Date(d.birthdate);
             var date = dt.getDate();
             var month = dt.getMonth() + 1;
-            var year = dt.getYear()+ 1900;
+            var year = dt.getYear() + 1900;
             var birthdateString = date + "-" + month + "-" + year;
 
             // `d` is the original data object for the row
