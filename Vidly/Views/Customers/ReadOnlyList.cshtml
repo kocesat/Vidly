@@ -1,0 +1,130 @@
+﻿
+
+@{
+    ViewBag.Title = "CustomerList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Customers</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-hover" id="customers">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Membership Type</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Membership Type</th>
+                </tr>
+            </tfoot>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        /* Formatting function for row details - modify as you need */
+        function format(d) {
+            var member = '';
+
+            if (d.isSubscribedToNewsletter) {
+                member = "Yes";
+            } else {
+                member = "No";
+            }
+
+            var dt = new Date(d.birthdate);
+            var date = dt.getDate();
+            var month = dt.getMonth() + 1;
+            var year = dt.getYear() + 1900;
+            var birthdateString = date + "-" + month + "-" + year;
+
+            // `d` is the original data object for the row
+            return "<table class='table table-bordered table-hover'>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td><strong>Id</strong></td>" +
+                "<td>" + d.id + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Name</strong></td>" +
+                "<td>" + d.name + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Birthdate</strong></td>" +
+                "<td>" + birthdateString + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Is Subscribed To Newsletter</strong></td>" +
+                "<td>" + member + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Membership Type</strong></td>" +
+                "<td>" + d.membershipType.name + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td><strong>Membership Type Id</strong></td>" +
+                "<td>" + d.membershipTypeId + "</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>"
+        }
+
+        $(document).ready(function () {
+            var table = $("#customers").DataTable({
+                order: [],
+                ajax: {
+                    url: "/api/customers",
+                    method: "GET",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        className: "details-control",
+                        data: null,
+                        defaultContent: "<",
+                        orderable: false
+                    },
+                    {
+                        data: "name"
+
+                    },
+                    {
+                        data: "membershipType.name"
+                    }
+                ]
+            });
+
+
+
+            $("#customers tbody").on("click", "td.details-control", function () {
+                var tr = $(this).closest("tr");
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    //This row is already open. Close it
+                    row.child.hide();
+                    tr.removeClass("shown");
+                } else {
+                    // open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            });
+
+        });
+    </script>
+}

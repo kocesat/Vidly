@@ -165,8 +165,8 @@ namespace Vidly.Controllers
                     //// temp code to populate our database
                     //var rolesStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
                     //var roleManager = new RoleManager<IdentityRole>(rolesStore);
-                    //await roleManager.CreateAsync(new IdentityRole("CanManageMovies"));
-                    //await UserManager.AddToRoleAsync(user.Id, "CanManageMovies");
+                    //await roleManager.CreateAsync(new IdentityRole("StoreManager"));
+                    //await UserManager.AddToRoleAsync(user.Id, "StoreManager");
 
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     

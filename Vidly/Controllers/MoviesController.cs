@@ -8,6 +8,7 @@ using Vidly.ViewModels;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 
+
 namespace Vidly.Controllers
 {
     public class MoviesController : Controller
@@ -29,7 +30,7 @@ namespace Vidly.Controllers
             //// if using AJAX call to api to get data the codes below not needed!
             //var movies = _context.Movies.Include(m => m.Genre).ToList();
 
-            if (User.IsInRole(RoleName.CanManageMovies))
+            if (User.IsInRole(RoleName.CanManageMovies) || User.IsInRole(RoleName.StoreManager))
             {
                 return View("List");
             }
@@ -63,7 +64,7 @@ namespace Vidly.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = RoleName.CanManageMovies)]
+        [Authorize(Roles = RoleName.CanManageMovies + RoleName.StoreManager)]
         public ActionResult Save(Movie movie)
         {
             if (!ModelState.IsValid)
@@ -115,7 +116,7 @@ namespace Vidly.Controllers
         //    return RedirectToAction("Index", "Movies");
         //}
 
-        [Authorize(Roles = RoleName.CanManageMovies)]
+        [Authorize(Roles = RoleName.CanManageMovies + RoleName.StoreManager)]
         public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(m => m.Id == id);

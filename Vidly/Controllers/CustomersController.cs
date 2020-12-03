@@ -35,8 +35,12 @@ namespace Vidly.Controllers
             //var customers = _context.Customers.Include(c => c.MembershipType).ToList();
 
             //return View(customers);
+            if (User.IsInRole(RoleName.StoreManager))
+            {
+                return View("List");
+            }
 
-            return View(); // feeding customers table with API
+            return View("ReadOnlyList");
         }
 
         public ActionResult Details(int id)
@@ -49,6 +53,7 @@ namespace Vidly.Controllers
             return View(customer);
         }
 
+        [Authorize(Roles = RoleName.StoreManager)]
         public ActionResult New()
         {
             var membershipTypes = _context.MembershipTypes.ToList();
@@ -63,6 +68,7 @@ namespace Vidly.Controllers
             return View("CustomerForm", viewModel);
         }
 
+        [Authorize(Roles = RoleName.StoreManager)]
         public ActionResult Edit(int id)
         {
             var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
@@ -84,6 +90,7 @@ namespace Vidly.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleName.StoreManager)]
         public ActionResult Save(Customer customer)
         {
             if (!ModelState.IsValid)
