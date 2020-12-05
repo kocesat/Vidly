@@ -21,11 +21,19 @@ namespace Vidly.Controllers.Api
         }
 
         // GET: /api/movies
-        public IHttpActionResult GetMovies()
+        public IHttpActionResult GetMovies(string query = null)
         {
             // argument of Select is actually a func-delegate
-            var movieList = _context.Movies.OrderByDescending(m => m.DateAdded)
+            var moviesQuery = _context.Movies.OrderByDescending(m => m.DateAdded)
                 .Include(m => m.Genre)
+                .Where(m => m.NumberAvailable > 0);
+
+            if (!String.IsNullOrWhiteSpace(query))
+            {
+                moviesQuery = moviesQuery.Where(m => m.Name.Contains(query));
+            }
+
+            var movieList = moviesQuery
                 .ToList()
                 .Select(Mapper.Map<Movie, MovieDto>);
 
@@ -57,6 +65,7 @@ namespace Vidly.Controllers.Api
             }
 
             movieDto.DateAdded = DateTime.Now;
+            movieDto.NumberAvailable = movieDto.NumberInStock;
             var movie = Mapper.Map<MovieDto, Movie>(movieDto);
 
             _context.Movies.Add(movie);

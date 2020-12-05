@@ -79,6 +79,7 @@ namespace Vidly.Controllers
 
             if (movie.Id == 0)
             {
+                movie.NumberAvailable = movie.NumberInStock;
                 movie.DateAdded = DateTime.Now;
                 _context.Movies.Add(movie);
             }
@@ -88,6 +89,8 @@ namespace Vidly.Controllers
 
                 movieInDb.Name = movie.Name;
                 movieInDb.NumberInStock = movie.NumberInStock;
+                //// Review here . Its updating numberInStock property.
+                //movieInDb.NumberAvailable = movieInDb.NumberInStock;
                 movieInDb.ReleaseDate = movie.ReleaseDate;
 
                 if (movie.GenreId != 0)
