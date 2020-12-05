@@ -46,11 +46,23 @@
         limit: 50,
         source: movies
     }).on("typeahead:select", function (e, movie) {
-        $("#movies").append("<li class='list-group-item clear-list'>" + movie.name + "</li>");
+        $("#movies").append("<li class='list-group-item'>" + movie.name + "  <button type='button' data-movie-id=" + movie.id + " class='js-delete-movie btn btn-danger btn-sm' aria-label='Close'> <span>&times;</span></button></li>");
 
         $("#movie").typeahead("val", "");
 
         vm.movieIds.push(movie.id);
+    });
+
+    $("#movies").on("click", ".js-delete-movie", function () {
+        var button = $(this);
+
+        var movieId = button.attr("data-movie-id");
+        vm.movieIds = vm.movieIds.filter(function (value) {
+            return value != movieId;
+        });
+
+        button.parents("li").remove();
+        console.log(button.parents("li").children().value());
     });
 
     //custom jquery validation method
